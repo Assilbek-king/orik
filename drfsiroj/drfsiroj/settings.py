@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
 ]
 
-CSRF_TRUSTED_ORIGINS=["*"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
