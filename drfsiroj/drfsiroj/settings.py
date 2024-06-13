@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r2z9e2)o_ewe2abg_hg4zf%otx+3+!q=^ze0o(bcy%2gh@+#!u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
 
 ]
 
+CSRF_TRUSTED_ORIGINS=["*"]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,7 +60,7 @@ ROOT_URLCONF = 'drfsiroj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['template'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
