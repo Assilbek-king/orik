@@ -1,15 +1,43 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import datetime
+import secrets
 
-class Person(models.Model):
-    name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    phone_num = models.CharField(max_length=200)
-    email = models.CharField(max_length=200, blank=True)
-    password = models.CharField(max_length=200)
+
+class PersonManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email address is required')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email, password, **extra_fields)
+
+class Person(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=200, blank=True)
+    last_name = models.CharField(max_length=200, blank=True)
+    phone_num = models.CharField(max_length=200, blank=True)
+    reset_password_token = models.CharField(max_length=6, blank=True, null=True)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = PersonManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.name
+        return self.email
+
 
 class UserSite(models.Model):
     name = models.CharField(max_length=200)
@@ -31,6 +59,11 @@ class Category(models.Model):
         return self.name
 
 
+class Unit(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
@@ -39,6 +72,8 @@ class Product(models.Model):
     image1 = models.ImageField(upload_to='upload')
     price = models.IntegerField(default=0)
     compound = models.TextField(blank=True)
+    storage = models.TextField(blank=True)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, blank=True,null=True)
     country = models.CharField(max_length=100,blank=True)
     discount = models.IntegerField(default=0)
     is_new = models.BooleanField(default=True)

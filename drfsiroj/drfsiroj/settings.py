@@ -40,10 +40,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'api',
     'siteapp',
 ]
 
+AUTH_USER_MODEL = 'api.Person'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +64,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'drfsiroj.urls'
+
+
+
 
 TEMPLATES = [
     {
@@ -131,3 +142,14 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'your-smtp-host'
+EMAIL_PORT = 587  # Port number
+EMAIL_USE_TLS = True  # Or False if you use SSL
+EMAIL_HOST_USER = 'asilbek.king.22@gmail.com'
+EMAIL_HOST_PASSWORD = 'Ithub001'
+DEFAULT_FROM_EMAIL = 'asilbek.king.22@gmail.com'

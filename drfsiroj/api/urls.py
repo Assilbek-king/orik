@@ -4,9 +4,15 @@ from .views import (
     ProductAPIView,
     CartAPIView,
     PersonAPIView,
+
 )
+from .views import SignupAPIView, LoginAPIView, LogoutAPIView
 
 urlpatterns = [
+    path('signup/', SignupAPIView.as_view(), name='signup'),
+    path('login/', LoginAPIView.as_view(), name='login'),
+    path('logout/', LogoutAPIView.as_view(), name='logout'),
+
     path('categories/', CategoryAPIView.as_view(), name='category-list'),
     path('categories/<int:pk>/', CategoryAPIView.as_view(), name='category-detail'),
 
@@ -18,4 +24,5 @@ urlpatterns = [
 
     path('persons/', PersonAPIView.as_view(), name='person-list'),
     path('persons/<int:pk>/', PersonAPIView.as_view(), name='person-detail'),
+
 ]

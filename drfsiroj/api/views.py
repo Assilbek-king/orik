@@ -1,8 +1,69 @@
+from .models import Category, Product, Cart, Person
+from .serializers import CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Category, Product, Cart, Person
-from .serializers import CategorySerializer, ProductSerializer, CartSerializer, PersonSerializer
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
+import secrets
+from rest_framework.authtoken.models import Token
+
+class SignupAPIView(APIView):
+    def post(self, request):
+        serializer = PersonSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                'token': token.key,
+                'user': PersonSerializer(user).data
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                'token': token.key,
+                'user': PersonSerializer(user).data
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.auth.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ResetPasswordAPIView(APIView):
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response({"detail": "Password reset code has been sent"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class UserLocationAPIView(APIView):
+#     def post(self, request, format=None):
+#         serializer = UserLocationSerializer(data=request.data)
+#         if serializer.is_valid():
+#             latitude = serializer.validated_data.get('latitude')
+#             longitude = serializer.validated_data.get('longitude')
+#
+#             # Здесь можно сохранить координаты в базу данных или выполнить другие действия
+#             # Например:
+#             # request.user.profile.latitude = latitude
+#             # request.user.profile.longitude = longitude
+#             # request.user.profile.save()
+#
+#             return Response({'message': 'Координаты успешно сохранены'}, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CategoryAPIView(APIView):
     def get(self, request, pk=None):
