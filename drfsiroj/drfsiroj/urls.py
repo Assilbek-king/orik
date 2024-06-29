@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from siteapp.views import *
+from django.urls import re_path as url
+from django.views.static import serve
+from drfsiroj import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +28,11 @@ urlpatterns = [
     path('order', zakazHandler),
     path('login', loginHandler),
     path('logout', logoutHandler),
+
+
+
+    url(r'^media/(?P<path>.*)$', serve, {
+    'document_root': settings.MEDIA_ROOT
+}
+    )
 ]
