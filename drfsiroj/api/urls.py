@@ -5,6 +5,7 @@ from .views import (
     CartAPIView,
     PersonAPIView,
     ResetPasswordAPIView,
+    PosterAPIView,
 
 )
 from .views import SignupAPIView, LoginAPIView, LogoutAPIView
@@ -26,5 +27,8 @@ urlpatterns = [
 
     path('persons/', PersonAPIView.as_view(), name='person-list'),
     path('persons/<int:pk>/', PersonAPIView.as_view(), name='person-detail'),
+
+    path('posters/', PosterAPIView.as_view(), name='poster-list'),
+    path('posters/<int:pk>/', PosterAPIView.as_view(), name='poster-detail'),
 
 ]

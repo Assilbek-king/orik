@@ -58,3 +58,6 @@ class CartAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 admin.site.register(Cart2, CartAdmin)
+
+
+admin.site.register(Poster)

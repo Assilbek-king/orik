@@ -6,11 +6,12 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Общие заказы</h1>
+      <h1>Мои заказы</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Главная</a></li>
-          <li class="breadcrumb-item active">Заказы</li>
+          <li class="breadcrumb-item"><a href="/order">Заказы</a></li>
+          <li class="breadcrumb-item active">Мои заказы</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -41,6 +42,7 @@
 
                 <tbody>
                 {% for c in carts %}
+                {% if c.siteuser.id == active_user.id %}
                   <tr>
                     <td>#{{ c.id }}</td>
                     <td>{{ c.person.name }} {{ c.person.last_name }} </td>
@@ -53,6 +55,7 @@
                       <span class="badge bg-danger">Rejected</span>
                     </td>
                   </tr>
+                {% endif %}
                 {% endfor %}
 
                 </tbody>

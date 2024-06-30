@@ -81,7 +81,11 @@ class Product2(models.Model):
     def __str__(self):
         return self.name
 
+class Poster(models.Model):
+    image = models.ImageField(upload_to='upload')
 
+    def __str__(self):
+        return self.image
 
 
 class Cart2(models.Model):

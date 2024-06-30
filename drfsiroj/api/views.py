@@ -1,5 +1,5 @@
 from .models import *
-from .serializers import CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer
+from .serializers import CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer,PosterSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -101,6 +101,47 @@ class CategoryAPIView(APIView):
         try:
             category = Category2.objects.get(pk=pk)
         except Category2.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PosterAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            try:
+                category = Poster.objects.get(pk=pk)
+            except Poster.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer = PosterSerializer(category)
+        else:
+            categories = Poster.objects.all()
+            serializer = PosterSerializer(categories, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PosterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk):
+        try:
+            category = Poster.objects.get(pk=pk)
+        except Poster.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PosterSerializer(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        try:
+            category = Poster.objects.get(pk=pk)
+        except Poster.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

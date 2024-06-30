@@ -95,18 +95,21 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link " href="tables-data.html">
+        <a class="nav-link " href="/order">
           <i class="bi bi-layout-text-window-reverse"></i>
           <span>Заказы</span>
         </a>
       </li>
 <!-- components-tabs.html  детали заказа-->
+
+      {% if active_user.status == 0 %}
       <li class="nav-item">
-        <a class="nav-link " href="users-profile.html">
+        <a class="nav-link " href="/myorder">
           <i class="bi bi-person"></i>
-          <span>Работники</span>
+          <span>Мои заказы</span>
         </a>
       </li>
+      {% endif %}
 
 
 

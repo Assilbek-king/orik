@@ -93,3 +93,10 @@ class CartSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PosterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Poster
+        fields = '__all__'
+
+
+

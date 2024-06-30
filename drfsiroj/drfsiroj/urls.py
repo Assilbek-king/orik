@@ -26,6 +26,8 @@ urlpatterns = [
     path('api/v1/', include('api.urls')),
     path('', indexHandler),
     path('order', zakazHandler),
+    path('myorder', moyzakazHandler),
+    path('order/<int:or_id>', zakazItemHandler),
     path('login', loginHandler),
     path('logout', logoutHandler),
 
