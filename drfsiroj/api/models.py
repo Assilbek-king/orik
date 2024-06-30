@@ -82,10 +82,11 @@ class Product2(models.Model):
         return self.name
 
 class Poster(models.Model):
+    name = models.CharField(max_length=300, default='yozma hech narsa',blank=True)
     image = models.ImageField(upload_to='upload')
 
     def __str__(self):
-        return self.image
+        return self.name
 
 
 class Cart2(models.Model):
