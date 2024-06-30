@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'siteapp',
 ]
 
-AUTH_USER_MODEL = 'api.Person'
+AUTH_USER_MODEL = 'api.Person2'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

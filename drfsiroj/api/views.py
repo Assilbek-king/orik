@@ -1,4 +1,4 @@
-from .models import Category, Product, Cart, Person
+from .models import *
 from .serializers import CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -69,12 +69,12 @@ class CategoryAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
             try:
-                category = Category.objects.get(pk=pk)
-            except Category.DoesNotExist:
+                category = Category2.objects.get(pk=pk)
+            except Category2.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = CategorySerializer(category)
         else:
-            categories = Category.objects.all()
+            categories = Category2.objects.all()
             serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
@@ -87,8 +87,8 @@ class CategoryAPIView(APIView):
 
     def put(self, request, pk):
         try:
-            category = Category.objects.get(pk=pk)
-        except Category.DoesNotExist:
+            category = Category2.objects.get(pk=pk)
+        except Category2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         serializer = CategorySerializer(category, data=request.data)
@@ -99,8 +99,8 @@ class CategoryAPIView(APIView):
 
     def delete(self, request, pk):
         try:
-            category = Category.objects.get(pk=pk)
-        except Category.DoesNotExist:
+            category = Category2.objects.get(pk=pk)
+        except Category2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -110,12 +110,12 @@ class ProductAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
             try:
-                product = Product.objects.get(pk=pk)
-            except Product.DoesNotExist:
+                product = Product2.objects.get(pk=pk)
+            except Product2.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = ProductSerializer(product)
         else:
-            products = Product.objects.all()
+            products = Product2.objects.all()
             serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
@@ -128,8 +128,8 @@ class ProductAPIView(APIView):
 
     def put(self, request, pk):
         try:
-            product = Product.objects.get(pk=pk)
-        except Product.DoesNotExist:
+            product = Product2.objects.get(pk=pk)
+        except Product2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         serializer = ProductSerializer(product, data=request.data)
@@ -140,8 +140,8 @@ class ProductAPIView(APIView):
 
     def delete(self, request, pk):
         try:
-            product = Product.objects.get(pk=pk)
-        except Product.DoesNotExist:
+            product = Product2.objects.get(pk=pk)
+        except Product2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -151,12 +151,12 @@ class CartAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
             try:
-                cart = Cart.objects.get(pk=pk)
-            except Cart.DoesNotExist:
+                cart = Cart2.objects.get(pk=pk)
+            except Cart2.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = CartSerializer(cart)
         else:
-            carts = Cart.objects.all()
+            carts = Cart2.objects.all()
             serializer = CartSerializer(carts, many=True)
         return Response(serializer.data)
 
@@ -169,8 +169,8 @@ class CartAPIView(APIView):
 
     def put(self, request, pk):
         try:
-            cart = Cart.objects.get(pk=pk)
-        except Cart.DoesNotExist:
+            cart = Cart2.objects.get(pk=pk)
+        except Cart2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         serializer = CartSerializer(cart, data=request.data)
@@ -181,8 +181,8 @@ class CartAPIView(APIView):
 
     def delete(self, request, pk):
         try:
-            cart = Cart.objects.get(pk=pk)
-        except Cart.DoesNotExist:
+            cart = Cart2.objects.get(pk=pk)
+        except Cart2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -192,13 +192,13 @@ class PersonAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
             try:
-                person = Person.objects.get(pk=pk)
+                person = Person2.objects.get(pk=pk)
                 serializer = PersonSerializer(person)
                 return Response(serializer.data)
-            except Person.DoesNotExist:
+            except Person2.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            persons = Person.objects.all()
+            persons = Person2.objects.all()
             serializer = PersonSerializer(persons, many=True)
             return Response(serializer.data)
 
@@ -211,19 +211,19 @@ class PersonAPIView(APIView):
 
     def put(self, request, pk):
         try:
-            person = Person.objects.get(pk=pk)
+            person = Person2.objects.get(pk=pk)
             serializer = PersonSerializer(person, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Person.DoesNotExist:
+        except Person2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, pk):
         try:
-            person = Person.objects.get(pk=pk)
+            person = Person2.objects.get(pk=pk)
             person.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Person.DoesNotExist:
+        except Person2.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

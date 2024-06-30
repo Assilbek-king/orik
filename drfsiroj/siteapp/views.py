@@ -10,7 +10,9 @@ def indexHandler(request):
     user_id = request.session.get('user_id', None)
     active_user = None
     if user_id:
-        active_user = UserSite.objects.get(id=int(user_id))
+        active_user = UserSite2.objects.get(id=int(user_id))
+
+
 
     return render(request, 'index.html',{
 
@@ -27,7 +29,7 @@ def loginHandler(request):
         password = request.POST.get('password', {})
         if email and password:
 
-            site_user = UserSite.objects.filter(email=email).filter(password=password)
+            site_user = UserSite2.objects.filter(email=email).filter(password=password)
 
             if site_user:
                 site_user = site_user[0]

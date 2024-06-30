@@ -20,7 +20,7 @@ class PersonManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-class Person(AbstractBaseUser, PermissionsMixin):
+class Person2(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=200, blank=True)
     last_name = models.CharField(max_length=200, blank=True)
@@ -39,7 +39,7 @@ class Person(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class UserSite(models.Model):
+class UserSite2(models.Model):
     name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     phone_num = models.CharField(max_length=200)
@@ -51,7 +51,7 @@ class UserSite(models.Model):
         return self.name
 
 
-class Category(models.Model):
+class Category2(models.Model):
     name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='upload', blank=True)
 
@@ -59,21 +59,21 @@ class Category(models.Model):
         return self.name
 
 
-class Unit(models.Model):
+class Unit2(models.Model):
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
-class Product(models.Model):
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
+class Product2(models.Model):
+    category = models.ForeignKey(Category2,on_delete=models.CASCADE)
     name = models.CharField(max_length=300)
     description = models.TextField(blank=True)
     image1 = models.ImageField(upload_to='upload')
     price = models.IntegerField(default=0)
     compound = models.TextField(blank=True)
     storage = models.TextField(blank=True)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, blank=True,null=True)
+    unit = models.ForeignKey(Unit2, on_delete=models.CASCADE, blank=True,null=True)
     country = models.CharField(max_length=100,blank=True)
     discount = models.IntegerField(default=0)
     is_new = models.BooleanField(default=True)
@@ -84,9 +84,9 @@ class Product(models.Model):
 
 
 
-class Cart(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    siteuser = models.ForeignKey(UserSite, on_delete=models.CASCADE,blank=True,null=True)
+class Cart2(models.Model):
+    person = models.ForeignKey(Person2, on_delete=models.CASCADE)
+    siteuser = models.ForeignKey(UserSite2, on_delete=models.CASCADE,blank=True,null=True)
     address = models.CharField(max_length=200, blank=True)
     is_accepted = models.BooleanField(default=False)
     is_payed = models.BooleanField(default=False)

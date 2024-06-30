@@ -9,12 +9,12 @@ Person = get_user_model()
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Person
+        model = Person2
         fields = ('id', 'email', 'name', 'last_name', 'phone_num', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = Person.objects.create_user(**validated_data)
+        user = Person2.objects.create_user(**validated_data)
         return user
 
 
@@ -42,7 +42,7 @@ class ResetPasswordSerializer(serializers.Serializer):
 
     def validate_email(self, value):
         try:
-            user = Person.objects.get(email=value)
+            user = Person2.objects.get(email=value)
             # Generate a 6-digit random code
             reset_code = ''.join(secrets.choice('0123456789') for i in range(6))
             user.reset_password_token = reset_code
@@ -58,38 +58,38 @@ class ResetPasswordSerializer(serializers.Serializer):
             )
 
             return value
-        except Person.DoesNotExist:
+        except Person2.DoesNotExist:
             raise serializers.ValidationError("User does not exist")
 
 
 class UnitSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Unit
+        model = Unit2
         fields = ('name',)
 
 class ProductSerializer(serializers.ModelSerializer):
     unit = serializers.StringRelatedField()
 
     class Meta:
-        model = Product
+        model = Product2
         fields = ('id', 'category', 'name', 'description', 'image1', 'price',
                   'compound', 'storage', 'unit', 'country', 'discount', 'is_new')
 
     def create(self, validated_data):
         unit_data = validated_data.pop('unit', None)
         if unit_data:
-            unit, created = Unit.objects.get_or_create(name=unit_data)
+            unit, created = Unit2.objects.get_or_create(name=unit_data)
             validated_data['unit'] = unit
-        return Product.objects.create(**validated_data)
+        return Product2.objects.create(**validated_data)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Category2
         fields = '__all__'
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cart
+        model = Cart2
         fields = '__all__'
 
 
