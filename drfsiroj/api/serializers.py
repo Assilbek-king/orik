@@ -6,6 +6,10 @@ import secrets
 
 Person = get_user_model()
 
+class PromocodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Promocode
+        fields = ['name', 'discount', 'status']
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:

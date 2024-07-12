@@ -35,24 +35,37 @@
                     <th>Сумма</th>
                     <th>Адрес</th>
                     <th data-type="date" data-format="YYYY/DD/MM HH:mm">Время заказа</th>
-                    <th>Действия</th>
+                    <th>Статус</th>
                   </tr>
                 </thead>
 
                 <tbody>
                 {% for c in carts %}
+
                   <tr>
-                    <td>#{{ c.id }}</td>
+
+                    <td><a href="/order/{{ c.id }}">#{{ c.id }}</a></td>
                     <td>{{ c.person.name }} {{ c.person.last_name }} </td>
                     <td>{{ c.total_price }}тг</td>
                     <td>{{ c.address }}</td>
                     <td>{{ c.created_at }}</td>
                     <td>
-                      <span class="badge bg-success">Approved</span> <br>
-                      <span class="badge bg-warning">Pending</span> <br>
-                      <span class="badge bg-danger">Rejected</span>
+                      {% if c.status == 0 %}
+                      <span class="badge bg-info">Новый заказ</span> <br>
+                      {% endif %}
+                      {% if c.status == 1 %}
+                      <span class="badge bg-warning">Отправлен</span> <br>
+                      {% endif %}
+                      {% if c.status == 2 %}
+                      <span class="badge bg-success">Доставлен</span> <br>
+                      {% endif %}
+                      {% if c.status == -1 %}
+                      <span class="badge bg-danger">Отменён</span>
+                      {% endif %}
                     </td>
+
                   </tr>
+
                 {% endfor %}
 
                 </tbody>

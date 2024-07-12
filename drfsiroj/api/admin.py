@@ -36,6 +36,13 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Category2, CategoryAdmin)
 
+class PromocodeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
+
+admin.site.register(Promocode, PromocodeAdmin)
+
 class UnitAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)

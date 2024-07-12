@@ -10,7 +10,7 @@ class PersonManager(BaseUserManager):
             raise ValueError('Email address is required')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        user.set_password(password)  # Паролни шифрлайди
         user.save(using=self._db)
         return user
 
@@ -19,7 +19,6 @@ class PersonManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, password, **extra_fields)
-
 class Person2(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=200, blank=True)
@@ -50,6 +49,13 @@ class UserSite2(models.Model):
     def __str__(self):
         return self.name
 
+class Promocode(models.Model):
+    name = models.CharField(max_length=200)
+    discount = models.IntegerField(blank=True)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 class Category2(models.Model):
     name = models.CharField(max_length=200)

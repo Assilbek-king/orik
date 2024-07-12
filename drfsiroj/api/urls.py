@@ -6,6 +6,7 @@ from .views import (
     PersonAPIView,
     ResetPasswordAPIView,
     PosterAPIView,
+    CheckPromocodeView
 
 )
 from .views import SignupAPIView, LoginAPIView, LogoutAPIView
@@ -30,5 +31,7 @@ urlpatterns = [
 
     path('posters/', PosterAPIView.as_view(), name='poster-list'),
     path('posters/<int:pk>/', PosterAPIView.as_view(), name='poster-detail'),
+
+    path('check-promocode/', CheckPromocodeView.as_view(), name='check-promocode'),
 
 ]

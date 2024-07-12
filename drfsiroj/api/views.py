@@ -1,5 +1,5 @@
 from .models import *
-from .serializers import CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer,PosterSerializer
+from .serializers import PromocodeSerializer, CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer,PosterSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,6 +8,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 import secrets
 from rest_framework.authtoken.models import Token
+
+class CheckPromocodeView(APIView):
+    def post(self, request, *args, **kwargs):
+        promocode_name = request.data.get('name')
+        try:
+            promocode = Promocode.objects.get(name=promocode_name, status=True)
+            serializer = PromocodeSerializer(promocode)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Promocode.DoesNotExist:
+            return Response({'error': 'Invalid promocode or inactive'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SignupAPIView(APIView):
     def post(self, request):
