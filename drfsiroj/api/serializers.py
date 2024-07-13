@@ -11,11 +11,18 @@ class PromocodeSerializer(serializers.ModelSerializer):
         model = Promocode
         fields = ['name', 'discount', 'status']
 
+
+
+
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person2
         fields = ('id', 'email', 'name', 'last_name', 'phone_num', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+            'password': {'write_only': True, 'required': False},
+            'email': {'required': False}
+        }
+
 
     def create(self, validated_data):
         user = Person2.objects.create_user(**validated_data)
