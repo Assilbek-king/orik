@@ -63,45 +63,94 @@
               <div class="tab-content pt-2">
 
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                  <h5 class="card-title">About</h5>
-<!--                  <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>-->
+                  <h5 class="card-title">Детали заказа</h5>
+                  <p class="small fst-italic"> Яблока 2<small>шт</small> х 360<small>тг</small>&nbsp; =  &nbsp; 720<small>тг</small></p>
+                  <p class="small fst-italic"> Яблока 2<small>шт</small> х 360<small>тг</small>&nbsp; =  &nbsp; 720<small>тг</small></p>
+                  <p class="small fst-italic"> Яблока 2<small>шт</small> х 360<small>тг</small>&nbsp; =  &nbsp; 720<small>тг</small></p>
+                  <p class="small fst-italic"> Яблока 2<small>шт</small> х 360<small>тг</small>&nbsp; =  &nbsp; 720<small>тг</small></p>
 
-                  <h5 class="card-title">Profile Details</h5>
+                  <p class="small fst-italic"><b> ИТОГОВАЯ СУММА &nbsp; =  &nbsp; 2800<small>тг</small></b></p>
+
+                  <h5 class="card-title">Заказчик</h5>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                    <div class="col-lg-3 col-md-4 label ">Имя Фамилия</div>
                     <div class="col-lg-9 col-md-8">{{ cart.person.name }} {{ cart.person.last_name }}</div>
                   </div>
 
+<!--                  <div class="row">-->
+<!--                    <div class="col-lg-3 col-md-4 label">Company</div>-->
+<!--                    <div class="col-lg-9 col-md-8">Lueilwitz, Wisoky and Leuschke</div>-->
+<!--                  </div>-->
+
+<!--                  <div class="row">-->
+<!--                    <div class="col-lg-3 col-md-4 label">Job</div>-->
+<!--                    <div class="col-lg-9 col-md-8">Web Designer</div>-->
+<!--                  </div>-->
+
+<!--                  <div class="row">-->
+<!--                    <div class="col-lg-3 col-md-4 label">Country</div>-->
+<!--                    <div class="col-lg-9 col-md-8">USA</div>-->
+<!--                  </div>-->
+
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Company</div>
-                    <div class="col-lg-9 col-md-8">Lueilwitz, Wisoky and Leuschke</div>
+                    <div class="col-lg-3 col-md-4 label">Адрес</div>
+                    <div class="col-lg-9 col-md-8">{{ cart.address }}</div>
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Job</div>
-                    <div class="col-lg-9 col-md-8">Web Designer</div>
+                    <div class="col-lg-3 col-md-4 label">Телефон</div>
+                    <div class="col-lg-9 col-md-8">{{ cart.person.phone_num }}</div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Country</div>
-                    <div class="col-lg-9 col-md-8">USA</div>
-                  </div>
+                 <div class="row">
+    <div class="col-lg-2 col-md-2 ">
+        {% if cart.status == 0 and active_user.status == 1 %}
+                <form action="{% url 'update_order_status' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cart_id" value="{{ cart.id }}">
+                    <input type="hidden" name="status" value="1">
+                    <button type="submit" class="btn btn-info"><small>Заказ готов</small></button>
+                </form>
+            {% elif cart.status == 1 and active_user.status == 0 %}
+                <form action="{% url 'update_order_status' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cart_id" value="{{ cart.id }}">
+                    <input type="hidden" name="status" value="2">
+                    <input type="hidden" name="delivery_person_id" value="{{ active_user.id }}">
+                    <button type="submit" class="btn btn-primary"><small>Подтвердить заказ</small></button>
+                </form>
+            {% elif cart.status == 2 and active_user.status == 1 %}
+                <form action="{% url 'update_order_status' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cart_id" value="{{ cart.id }}">
+                    <input type="hidden" name="status" value="3">
+                    <button type="submit" class="btn btn-warning"><small>Отправить заказ</small></button>
+                </form>
+            {% elif cart.status == 3 and active_user.status == 0 %}
+                <form action="{% url 'update_order_status' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cart_id" value="{{ cart.id }}">
+                    <input type="hidden" name="status" value="4">
+                    <button type="submit" class="btn btn-success"><small>Завершить заказ</small></button>
+                </form>
+            {% endif %}
+    </div>
+    <div class="col-lg-2 col-md-2 ">
+        <form action="{% url 'update_order_status' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="cart_id" value="{{ cart.id }}">
+            <input type="hidden" name="status" value="-1">
+            <button type="submit" class="btn btn-danger"><small>Отменить заказ</small></button>
+        </form>
+    </div>
+</div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Address</div>
-                    <div class="col-lg-9 col-md-8">A108 Adam Street, New York, NY 535022</div>
-                  </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Phone</div>
-                    <div class="col-lg-9 col-md-8">(436) 486-3538 x29071</div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8">k.anderson@example.com</div>
-                  </div>
+<!--                  <div class="row">-->
+<!--                    <div class="col-lg-3 col-md-4 label">Email</div>-->
+<!--                    <div class="col-lg-9 col-md-8">k.anderson@example.com</div>-->
+<!--                  </div>-->
 
                 </div>
 

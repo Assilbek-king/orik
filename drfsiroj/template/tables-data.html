@@ -40,33 +40,60 @@
                 </thead>
 
                 <tbody>
-                {% for c in carts %}
+                {% if active_user.status == 1 %}
+                {% for cart in carts %}
 
                   <tr>
 
-                    <td><a href="/order/{{ c.id }}">#{{ c.id }}</a></td>
-                    <td>{{ c.person.name }} {{ c.person.last_name }} </td>
-                    <td>{{ c.total_price }}тг</td>
-                    <td>{{ c.address }}</td>
-                    <td>{{ c.created_at }}</td>
+                    <td><a href="/order/{{ cart.id }}">#{{ cart.id }}</a></td>
+                    <td>{{ cart.person.name }} {{ cart.person.last_name }} </td>
+                    <td>{{ cart.total_price }}тг</td>
+                    <td>{{ cart.address }}</td>
+                    <td>{{ cart.created_at }}</td>
                     <td>
-                      {% if c.status == 0 %}
-                      <span class="badge bg-info">Новый заказ</span> <br>
-                      {% endif %}
-                      {% if c.status == 1 %}
-                      <span class="badge bg-warning">Отправлен</span> <br>
-                      {% endif %}
-                      {% if c.status == 2 %}
-                      <span class="badge bg-success">Доставлен</span> <br>
-                      {% endif %}
-                      {% if c.status == -1 %}
-                      <span class="badge bg-danger">Отменён</span>
-                      {% endif %}
+
+                      {% if cart.status == 0 %}
+                <span class="badge bg-info">Новый заказ</span> <br>
+            {% elif cart.status == 1 %}
+                <span class="badge bg-warning">Готовый заказ</span> <br>
+            {% elif cart.status == 2 %}
+                <span class="badge bg-success">Отправлен</span> <br>
+            {% elif cart.status == 3 %}
+                <span class="badge bg-success">Доставлен</span> <br>
+            {% elif cart.status == 4 %}
+                <span class="badge bg-success">Завершен</span> <br>
+            {% elif cart.status == -1 %}
+                <span class="badge bg-danger">Отменён</span>
+            {% endif %}
+
                     </td>
 
                   </tr>
 
                 {% endfor %}
+                {% endif %}
+                {% if active_user.status == 0 %}
+                 {% for cart in carts %}
+{% if cart.status == 1 %}
+                  <tr>
+
+                    <td><a href="/order/{{ cart.id }}">#{{ cart.id }}</a></td>
+                    <td>{{ cart.person.name }} {{ cart.person.last_name }} </td>
+                    <td>{{ cart.total_price }}тг</td>
+                    <td>{{ cart.address }}</td>
+                    <td>{{ cart.created_at }}</td>
+                    <td>
+
+
+                <span class="badge bg-info">Новый заказ</span> <br>
+
+
+                    </td>
+
+                  </tr>
+               {% endif %}
+                {% endfor %}
+                {% endif %}
 
                 </tbody>
               </table>
@@ -80,5 +107,9 @@
     </section>
 
   </main><!-- End #main -->
+
+
+
+
 
 {% endblock %}

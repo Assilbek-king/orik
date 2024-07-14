@@ -1,7 +1,11 @@
+
+
 from django.shortcuts import render, redirect
 from api.models import *
 # Create your views here.
-
+import json
+from django.http import JsonResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 
 def indexHandler(request):
     if not request.session.get('user_id', None):
@@ -18,6 +22,30 @@ def indexHandler(request):
 
         'active_user': active_user
     })
+
+@csrf_exempt
+def update_order_status(request):
+    if request.method == 'POST':
+        cart_id = request.POST.get('cart_id')
+        status = request.POST.get('status')
+
+        try:
+            cart = Cart2.objects.get(id=cart_id)
+            cart.status = int(status)
+
+            if status == '2':  # Проверяем, если это подтверждение заказа
+                delivery_person_id = request.POST.get('delivery_person_id')
+                user_site = UserSite2.objects.get(id=int(delivery_person_id))
+                cart.siteuser = user_site
+
+            cart.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))  # Перенаправляем обратно
+        except Cart2.DoesNotExist:
+            return JsonResponse({'error': 'Заказ не найден'}, status=404)
+        except UserSite2.DoesNotExist:
+            return JsonResponse({'error': 'Пользователь не найден'}, status=404)
+    return JsonResponse({'error': 'Неверный запрос'}, status=400)
+
 
 def zakazHandler(request):
     if not request.session.get('user_id', None):
@@ -47,7 +75,7 @@ def moyzakazHandler(request):
 
     carts = Cart2.objects.filter(status__gt=-1).filter(siteuser__id = active_user.id)
 
-    return render(request, 'tables-data.html',{
+    return render(request, 'moizakazi.html',{
         'carts': carts,
         'active_user': active_user
 

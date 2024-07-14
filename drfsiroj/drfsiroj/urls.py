@@ -21,6 +21,7 @@ from django.urls import re_path as url
 from django.views.static import serve
 from drfsiroj import settings
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('api.urls')),
@@ -30,8 +31,7 @@ urlpatterns = [
     path('order/<int:or_id>', zakazItemHandler),
     path('login', loginHandler),
     path('logout', logoutHandler),
-
-
+    path('update_order_status/', update_order_status, name='update_order_status'),
 
     url(r'^media/(?P<path>.*)$', serve, {
     'document_root': settings.MEDIA_ROOT

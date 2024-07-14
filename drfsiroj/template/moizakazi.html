@@ -26,7 +26,7 @@
               <!-- <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> class name to any table you wish to conver to a datatable. Check for <a href="https://fiduswriter.github.io/simple-datatables/demos/" target="_blank">more examples</a>.</p> -->
 
               <!-- Table with stripped rows -->
-              <table class="table datatable">
+               <table class="table datatable">
                 <thead>
                   <tr>
                     <th style="width:10%">#</th>
@@ -36,26 +36,30 @@
                     <th>Сумма</th>
                     <th>Адрес</th>
                     <th data-type="date" data-format="YYYY/DD/MM HH:mm">Время заказа</th>
-                    <th>Действия</th>
+                    <th>Статус</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                {% for c in carts %}
-                {% if c.siteuser.id == active_user.id %}
+
+                 {% for cart in carts %}
+
                   <tr>
-                    <td>#{{ c.id }}</td>
-                    <td>{{ c.person.name }} {{ c.person.last_name }} </td>
-                    <td>{{ c.total_price }}тг</td>
-                    <td>{{ c.address }}</td>
-                    <td>{{ c.created_at }}</td>
+
+                    <td><a href="/order/{{ cart.id }}">#{{ cart.id }}</a></td>
+                    <td>{{ cart.person.name }} {{ cart.person.last_name }} </td>
+                    <td>{{ cart.total_price }}тг</td>
+                    <td>{{ cart.address }}</td>
+                    <td>{{ cart.created_at }}</td>
                     <td>
-                      <span class="badge bg-success">Approved</span> <br>
-                      <span class="badge bg-warning">Pending</span> <br>
-                      <span class="badge bg-danger">Rejected</span>
+
+
+                <span class="badge bg-info">заказ</span> <br>
+
+
                     </td>
+
                   </tr>
-                {% endif %}
                 {% endfor %}
 
                 </tbody>
