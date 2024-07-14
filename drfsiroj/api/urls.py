@@ -6,7 +6,8 @@ from .views import (
     PersonAPIView,
     ResetPasswordAPIView,
     PosterAPIView,
-    CheckPromocodeView
+    CheckPromocodeView,
+    CalculateDistanceView
 
 )
 from .views import SignupAPIView, LoginAPIView, LogoutAPIView
@@ -33,5 +34,6 @@ urlpatterns = [
     path('posters/<int:pk>/', PosterAPIView.as_view(), name='poster-detail'),
 
     path('check-promocode/', CheckPromocodeView.as_view(), name='check-promocode'),
+    path('calculate_distance/', CalculateDistanceView.as_view(), name='calculate_distance'),
 
 ]

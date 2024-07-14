@@ -8,6 +8,48 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 import secrets
 from rest_framework.authtoken.models import Token
+import requests
+
+class CalculateDistanceView(APIView):
+    def post(self, request, *args, **kwargs):
+        origin = request.data.get('origin', '')  # Получаем точку отправления
+        destination = '42.30020238827357, 69.76079934783557'  # Фиксированная точка назначения
+        mode = request.data.get('mode', 'driving')  # Режим по умолчанию
+        api_key = 'AIzaSyDqiZx9bv1VK85IzCLSeXy9FvCjZeB-_bc'  # Замените на свой ключ API
+
+        url = f'https://maps.googleapis.com/maps/api/directions/json'
+        params = {
+            'origin': origin,
+            'destination': destination,
+            'mode': mode,
+            'key': api_key
+        }
+
+        response = requests.get(url, params=params)
+        data = response.json()
+
+        if data['status'] == 'OK':
+            route = data['routes'][0]
+            legs = route['legs'][0]
+            distance = legs['distance']['text']
+            duration = legs['duration']['text']
+            steps = [step['html_instructions'] for step in legs['steps']]
+
+            return Response({
+                'distance': distance,
+                'duration': duration,
+                'steps': steps
+            })
+        else:
+            return Response({'error': 'Маршрут не найден.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
 
 class CheckPromocodeView(APIView):
     def post(self, request, *args, **kwargs):

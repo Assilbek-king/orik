@@ -4,8 +4,8 @@ import requests
 api_key = 'AIzaSyDqiZx9bv1VK85IzCLSeXy9FvCjZeB-_bc'
 
 # Манзилларни киритинг
-origin = '42.30020238827357, 69.76079934783557'  # Тошкент координаталари
-destination = '42.31153616338686, 69.73558910463083'  # Ню-Йорк координаталари
+origin = '42.30020238827357, 69.76079934783557'
+destination = '42.31153616338686, 69.73558910463083'
 
 # URL манзилини тайёрланг
 url = f'https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&mode=driving&key={api_key}'

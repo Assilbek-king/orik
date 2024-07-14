@@ -7,6 +7,15 @@ import json
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
+
+
+
+
+
+
+
+
+
 def indexHandler(request):
     if not request.session.get('user_id', None):
         return redirect('/login')
