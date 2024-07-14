@@ -2,17 +2,12 @@
 
 from django.shortcuts import render, redirect
 from api.models import *
+from django.views import View
+from django.shortcuts import get_object_or_404
 # Create your views here.
 import json
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-
-
-
-
-
-
-
 
 
 
@@ -32,19 +27,19 @@ def indexHandler(request):
         'active_user': active_user
     })
 
-@csrf_exempt
-def update_order_status(request):
-    if request.method == 'POST':
+
+class UpdateOrderStatusView(View):
+    def post(self, request, *args, **kwargs):
         cart_id = request.POST.get('cart_id')
         status = request.POST.get('status')
 
         try:
-            cart = Cart2.objects.get(id=cart_id)
+            cart = get_object_or_404(Cart2, id=cart_id)
             cart.status = int(status)
 
             if status == '2':  # Проверяем, если это подтверждение заказа
                 delivery_person_id = request.POST.get('delivery_person_id')
-                user_site = UserSite2.objects.get(id=int(delivery_person_id))
+                user_site = get_object_or_404(UserSite2, id=int(delivery_person_id))
                 cart.siteuser = user_site
 
             cart.save()
@@ -53,9 +48,11 @@ def update_order_status(request):
             return JsonResponse({'error': 'Заказ не найден'}, status=404)
         except UserSite2.DoesNotExist:
             return JsonResponse({'error': 'Пользователь не найден'}, status=404)
-    return JsonResponse({'error': 'Неверный запрос'}, status=400)
+        except ValueError:
+            return JsonResponse({'error': 'Неверный формат данных'}, status=400)
 
-
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({'error': 'Метод GET не поддерживается'}, status=405)
 def zakazHandler(request):
     if not request.session.get('user_id', None):
         return redirect('/login')

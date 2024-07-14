@@ -31,8 +31,7 @@ urlpatterns = [
     path('order/<int:or_id>', zakazItemHandler),
     path('login', loginHandler),
     path('logout', logoutHandler),
-    path('update_order_status/', update_order_status, name='update_order_status'),
-
+    path('update_order_status/', UpdateOrderStatusView.as_view(), name='update_order_status'),
     url(r'^media/(?P<path>.*)$', serve, {
     'document_root': settings.MEDIA_ROOT
 }
