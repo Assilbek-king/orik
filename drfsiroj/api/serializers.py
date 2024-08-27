@@ -13,7 +13,6 @@ class PromocodeSerializer(serializers.ModelSerializer):
 
 
 
-
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person2
@@ -23,30 +22,27 @@ class PersonSerializer(serializers.ModelSerializer):
             'email': {'required': False}
         }
 
-
     def create(self, validated_data):
         user = Person2.objects.create_user(**validated_data)
         return user
 
-
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    phone_num = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, data):
-        email = data.get('email')
+        phone_num = data.get('phone_num')
         password = data.get('password')
 
-        if email and password:
-            user = authenticate(email=email, password=password)
+        if phone_num and password:
+            user = authenticate(username=phone_num, password=password)  # Проверьте, что username=phone_num здесь работает корректно
 
             if not user:
-                raise serializers.ValidationError("Invalid email or password")
+                raise serializers.ValidationError("Invalid phone number or password")
         else:
-            raise serializers.ValidationError("Must include 'email' and 'password'")
+            raise serializers.ValidationError("Must include 'phone_num' and 'password'")
 
         return user
-
 
 class ResetPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()

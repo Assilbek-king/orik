@@ -5,25 +5,26 @@ import secrets
 
 
 class PersonManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('Email address is required')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # Паролни шифрлайди
+    def create_user(self, phone_num, password=None, **extra_fields):
+        if not phone_num:
+            raise ValueError('Phone number is required')
+        user = self.model(phone_num=phone_num, **extra_fields)
+        user.set_password(password)  # Пароль шифруется
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, phone_num, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(phone_num, password, **extra_fields)
+
 class Person2(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=200, blank=True)
     last_name = models.CharField(max_length=200, blank=True)
-    phone_num = models.CharField(max_length=200, blank=True)
+    phone_num = models.CharField(max_length=200, unique=True)  # Убедитесь, что поле уникально
+
     reset_password_token = models.CharField(max_length=6, blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
@@ -31,11 +32,12 @@ class Person2(AbstractBaseUser, PermissionsMixin):
 
     objects = PersonManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'phone_num'  # Используем телефонный номер в качестве основного поля для логина
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.email
+        return self.phone_num  # Возвращаем номер телефона в строковом представлении
+
 
 
 class UserSite2(models.Model):
