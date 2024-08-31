@@ -13,7 +13,7 @@ import requests
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
         origin = request.data.get('origin', '')  # Получаем точку отправления
-        destination = '42.30020238827357, 69.76079934783557'  # Фиксированная точка назначения
+        destination = '42.366308, 69.525283'  # Фиксированная точка назначения
         mode = request.data.get('mode', 'driving')  # Режим по умолчанию
         api_key = 'AIzaSyDqiZx9bv1VK85IzCLSeXy9FvCjZeB-_bc'  # Замените на свой ключ API
 
