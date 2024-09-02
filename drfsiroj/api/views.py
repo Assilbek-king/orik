@@ -3,6 +3,7 @@ from .serializers import PromocodeSerializer, CategorySerializer, ProductSeriali
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
@@ -208,10 +209,13 @@ class ProductAPIView(APIView):
             except Product2.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = ProductSerializer(product)
+            return Response(serializer.data)
         else:
             products = Product2.objects.all()
-            serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+            paginator = LimitOffsetPagination()
+            result_page = paginator.paginate_queryset(products, request)
+            serializer = ProductSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
@@ -239,7 +243,6 @@ class ProductAPIView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class CartAPIView(APIView):
     def get(self, request, pk=None):
