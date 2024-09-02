@@ -215,7 +215,7 @@ class ProductAPIView(APIView):
             paginator = LimitOffsetPagination()
             result_page = paginator.paginate_queryset(products, request)
             serializer = ProductSerializer(result_page, many=True)
-            return paginator.get_paginated_response(serializer.data)
+            return Response(serializer.data)
 
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
