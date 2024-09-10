@@ -10,15 +10,23 @@ from django.core.mail import send_mail
 import secrets
 from rest_framework.authtoken.models import Token
 import requests
+import os
+from django.conf import settings
 
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
         origin = request.data.get('origin', '')  # Получаем точку отправления
         destination = '42.366308, 69.525283'  # Фиксированная точка назначения
         mode = request.data.get('mode', 'driving')  # Режим по умолчанию
-        api_key = 'AIzaSyDqiZx9bv1VK85IzCLSeXy9FvCjZeB-_bc'  # Замените на свой ключ API
+        api_key = 'AIzaSyDqiZx9bv1VK85IzCLSeXy9FvCjZeB-_bc'  # Получаем ключ API из переменных окружения
 
-        url = f'https://maps.googleapis.com/maps/api/directions/json'
+        if not origin:
+            return Response({'error': 'Точка отправления не указана.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not api_key:
+            return Response({'error': 'API ключ не найден.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        url = 'https://maps.googleapis.com/maps/api/directions/json'
         params = {
             'origin': origin,
             'destination': destination,
@@ -26,24 +34,27 @@ class CalculateDistanceView(APIView):
             'key': api_key
         }
 
-        response = requests.get(url, params=params)
-        data = response.json()
+        try:
+            response = requests.get(url, params=params)
+            data = response.json()
 
-        if data['status'] == 'OK':
-            route = data['routes'][0]
-            legs = route['legs'][0]
-            distance = legs['distance']['text']
-            duration = legs['duration']['text']
-            steps = [step['html_instructions'] for step in legs['steps']]
+            if data['status'] == 'OK':
+                route = data['routes'][0]
+                legs = route['legs'][0]
+                distance = legs['distance']['text']
+                duration = legs['duration']['text']
+                steps = [step['html_instructions'] for step in legs['steps']]
 
-            return Response({
-                'distance': distance,
-                'duration': duration,
-                'steps': steps
-            })
-        else:
-            return Response({'error': 'Маршрут не найден.'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    'distance': distance,
+                    'duration': duration,
+                    'steps': steps
+                })
+            else:
+                return Response({'error': 'Маршрут не найден.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        except requests.RequestException as e:
+            return Response({'error': f'Ошибка запроса: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
