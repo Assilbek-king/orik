@@ -14,34 +14,34 @@ from rest_framework.authtoken.models import Token
 import requests
 import os
 from django.conf import settings
-#
-# def search_address(request):
-#     query = request.GET.get('query')
-#
-#     # Параметры запроса для 2GIS API
-#     api_url = 'https://catalog.api.2gis.com/3.0/items'
-#     params = {
-#         'q': query,
-#         'city_id': '22659358439328791',
-#         'key': settings.DGIS_API_KEY
-#     }
-#
-#     # Отправляем запрос к 2GIS API
-#     response = requests.get(api_url, params=params)
-#     data = response.json()
-#
-#     # Формируем список адресов
-#     if data.get('result') and data['result'].get('items'):
-#         suggestions = []
-#         for item in data['result']['items']:
-#             suggestions.append({
-#                 'address_name': item.get('full_name'),
-#                 'id': item.get('id'),
-#                 'type': item.get('type')
-#             })
-#         return JsonResponse(suggestions, safe=False)
-#     else:
-#         return JsonResponse({'error': 'Нет совпадений'}, status=404)
+
+def search_address(request):
+    query = request.GET.get('query')
+
+    # Параметры запроса для 2GIS API
+    api_url = 'https://catalog.api.2gis.com/3.0/items'
+    params = {
+        'q': query,
+        'city_id': '22659358439328791',
+        'key': settings.DGIS_API_KEY
+    }
+
+    # Отправляем запрос к 2GIS API
+    response = requests.get(api_url, params=params)
+    data = response.json()
+
+    # Формируем список адресов
+    if data.get('result') and data['result'].get('items'):
+        suggestions = []
+        for item in data['result']['items']:
+            suggestions.append({
+                'address_name': item.get('full_name'),
+                'id': item.get('id'),
+                'type': item.get('type')
+            })
+        return JsonResponse(suggestions, safe=False)
+    else:
+        return JsonResponse({'error': 'Нет совпадений'}, status=404)
 
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
