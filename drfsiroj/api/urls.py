@@ -7,12 +7,15 @@ from .views import (
     ResetPasswordAPIView,
     PosterAPIView,
     CheckPromocodeView,
-    CalculateDistanceView
+    CalculateDistanceView,
+    search_address
 
 )
 from .views import SignupAPIView, LoginAPIView, LogoutAPIView
 
 urlpatterns = [
+    path('search_address/', search_address, name='autocomplete_address'),
+
     path('signup/', SignupAPIView.as_view(), name='signup'),
     path('login/', LoginAPIView.as_view(), name='login'),
     path('logout/', LogoutAPIView.as_view(), name='logout'),

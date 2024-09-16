@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+
 from .models import *
 from .serializers import PromocodeSerializer, CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer,PosterSerializer
 from rest_framework.views import APIView
@@ -12,6 +14,34 @@ from rest_framework.authtoken.models import Token
 import requests
 import os
 from django.conf import settings
+#
+# def search_address(request):
+#     query = request.GET.get('query')
+#
+#     # Параметры запроса для 2GIS API
+#     api_url = 'https://catalog.api.2gis.com/3.0/items'
+#     params = {
+#         'q': query,
+#         'city_id': '22659358439328791',
+#         'key': settings.DGIS_API_KEY
+#     }
+#
+#     # Отправляем запрос к 2GIS API
+#     response = requests.get(api_url, params=params)
+#     data = response.json()
+#
+#     # Формируем список адресов
+#     if data.get('result') and data['result'].get('items'):
+#         suggestions = []
+#         for item in data['result']['items']:
+#             suggestions.append({
+#                 'address_name': item.get('full_name'),
+#                 'id': item.get('id'),
+#                 'type': item.get('type')
+#             })
+#         return JsonResponse(suggestions, safe=False)
+#     else:
+#         return JsonResponse({'error': 'Нет совпадений'}, status=404)
 
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
@@ -257,15 +287,24 @@ class ProductAPIView(APIView):
 
 class CartAPIView(APIView):
     def get(self, request, pk=None):
+        person_id = request.query_params.get('person_id', None)  # Получаем person_id из параметров запроса
+
         if pk:
             try:
                 cart = Cart2.objects.get(pk=pk)
             except Cart2.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = CartSerializer(cart)
+        elif person_id:
+            # Фильтрация корзин по person_id
+            carts = Cart2.objects.filter(person_id=person_id)
+            if not carts.exists():
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer = CartSerializer(carts, many=True)
         else:
             carts = Cart2.objects.all()
             serializer = CartSerializer(carts, many=True)
+
         return Response(serializer.data)
 
     def post(self, request):
