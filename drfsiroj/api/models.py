@@ -110,7 +110,7 @@ class Cart2(models.Model):
 
     created_at = models.DateTimeField(default=datetime.now)
     finished_at = models.DateTimeField(default=datetime.now)
-    status = models.IntegerField(default=0)  # 0 - created zakaz, -1 - otmenen, 1 - confirmed, 2 - accepted
+    status = models.IntegerField(default=1)  # 0 - created zakaz, -1 - otmenen, 1 - confirmed, 2 - accepted
 
 
 

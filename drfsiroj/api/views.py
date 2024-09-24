@@ -15,20 +15,28 @@ import requests
 import os
 from django.conf import settings
 
+
 def search_address(request):
     query = request.GET.get('query')
+
+    if not query:
+        return JsonResponse({'error': 'Параметр query обязателен'}, status=400)
 
     # Параметры запроса для 2GIS API
     api_url = 'https://catalog.api.2gis.com/3.0/items'
     params = {
         'q': query,
-        'city_id': '22659358439328791',
+        'city_id': '22659358439328791',  # ID города Шымкент
         'key': settings.DGIS_API_KEY
     }
 
-    # Отправляем запрос к 2GIS API
-    response = requests.get(api_url, params=params)
-    data = response.json()
+    try:
+        # Отправляем запрос к 2GIS API
+        response = requests.get(api_url, params=params)
+        response.raise_for_status()  # Выбрасывает ошибку, если статус код != 200
+        data = response.json()
+    except requests.exceptions.RequestException:
+        return JsonResponse({'error': 'Ошибка сервиса 2GIS'}, status=500)
 
     # Формируем список адресов
     if data.get('result') and data['result'].get('items'):
@@ -42,7 +50,6 @@ def search_address(request):
         return JsonResponse(suggestions, safe=False)
     else:
         return JsonResponse({'error': 'Нет совпадений'}, status=404)
-
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
         origin = request.data.get('origin', '')  # Получаем точку отправления
