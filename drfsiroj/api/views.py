@@ -15,41 +15,33 @@ import requests
 import os
 from django.conf import settings
 
+import requests
+from django.http import JsonResponse
+from django.conf import settings
+
 
 def search_address(request):
-    query = request.GET.get('query')
-
+    query = request.GET.get('query', '')
     if not query:
-        return JsonResponse({'error': 'Параметр query обязателен'}, status=400)
+        return JsonResponse({"error": "Query is required"}, status=400)
 
-    # Параметры запроса для 2GIS API
-    api_url = 'https://catalog.api.2gis.com/3.0/items'
+    # Параметры для запроса в 2GIS Suggest API
     params = {
         'q': query,
-        'city_id': '22659358439328791',  # ID города Шымкент
-        'key': settings.DGIS_API_KEY
+        'key': settings.DGIS_API_KEY,  # Ключ API 2GIS, сохраненный в settings.py
     }
 
-    try:
-        # Отправляем запрос к 2GIS API
-        response = requests.get(api_url, params=params)
-        response.raise_for_status()  # Выбрасывает ошибку, если статус код != 200
-        data = response.json()
-    except requests.exceptions.RequestException:
-        return JsonResponse({'error': 'Ошибка сервиса 2GIS'}, status=500)
+    # Запрос к API 2GIS
+    url = 'https://catalog.api.2gis.com/3.0/suggests'
+    response = requests.get(url, params=params)
 
-    # Формируем список адресов
-    if data.get('result') and data['result'].get('items'):
-        suggestions = []
-        for item in data['result']['items']:
-            suggestions.append({
-                'address_name': item.get('full_name'),
-                'id': item.get('id'),
-                'type': item.get('type')
-            })
-        return JsonResponse(suggestions, safe=False)
+    # Проверка успешности запроса
+    if response.status_code == 200:
+        data = response.json()
+        return JsonResponse(data)
     else:
-        return JsonResponse({'error': 'Нет совпадений'}, status=404)
+        return JsonResponse({"error": "Failed to fetch data from 2GIS"}, status=500)
+
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
         origin = request.data.get('origin', '')  # Получаем точку отправления
