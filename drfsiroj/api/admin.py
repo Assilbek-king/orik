@@ -68,3 +68,4 @@ admin.site.register(Cart2, CartAdmin)
 
 
 admin.site.register(Poster)
+admin.site.register(Pay_on_delivery)

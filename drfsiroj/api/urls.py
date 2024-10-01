@@ -8,13 +8,15 @@ from .views import (
     PosterAPIView,
     CheckPromocodeView,
     CalculateDistanceView,
-    search_address
+    search_address,
+    PayOnDeliveryAPIView
 
 )
 from .views import SignupAPIView, LoginAPIView, LogoutAPIView
 
 urlpatterns = [
     path('search_address/', search_address, name='autocomplete_address'),
+    path('pay_on_delivery/', PayOnDeliveryAPIView.as_view(), name='PayOnDeliveryViewSet'),
 
     path('signup/', SignupAPIView.as_view(), name='signup'),
     path('login/', LoginAPIView.as_view(), name='login'),

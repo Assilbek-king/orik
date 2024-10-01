@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 
 from .models import *
-from .serializers import PromocodeSerializer, CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer,PosterSerializer
+from .serializers import PromocodeSerializer, CategorySerializer, ProductSerializer, CartSerializer,PersonSerializer, LoginSerializer, ResetPasswordSerializer,PosterSerializer,PayOnDeliverySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -41,6 +41,11 @@ def search_address(request):
         return JsonResponse(data)
     else:
         return JsonResponse({"error": "Failed to fetch data from 2GIS"}, status=500)
+
+
+
+
+
 
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
@@ -87,7 +92,18 @@ class CalculateDistanceView(APIView):
 
 
 
-
+class PayOnDeliveryAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            try:
+                pay_delivery = Pay_on_delivery.objects.get(pk=pk)
+            except Pay_on_delivery.DoesNotExist:
+                return Response({'error': 'Pay_on_delivery record not found'}, status=status.HTTP_404_NOT_FOUND)
+            serializer = PayOnDeliverySerializer(pay_delivery)
+        else:
+            pay_deliveries = Pay_on_delivery.objects.all()
+            serializer = PayOnDeliverySerializer(pay_deliveries, many=True)
+        return Response(serializer.data)
 
 
 

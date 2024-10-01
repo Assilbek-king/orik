@@ -11,7 +11,10 @@ class PromocodeSerializer(serializers.ModelSerializer):
         model = Promocode
         fields = ['name', 'discount', 'status']
 
-
+class PayOnDeliverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pay_on_delivery
+        fields = '__all__'
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:

@@ -117,3 +117,12 @@ class Cart2(models.Model):
     def __str__(self):
         return f'Cart {self.id} for {self.person.name} {self.person.last_name}'
 
+
+
+class Pay_on_delivery(models.Model):
+    price_for_car = models.IntegerField(default=120,blank=True)
+    price_for_maped = models.IntegerField(default=70,blank=True)
+    limit = models.IntegerField(default=6,blank=True)
+
+    def __str__(self):
+        return str(self.price_for_car)
