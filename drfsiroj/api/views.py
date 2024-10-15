@@ -20,38 +20,46 @@ from django.http import JsonResponse
 from django.conf import settings
 
 
-def search_address(request):
-    query = request.GET.get('query', '')
-    if not query:
-        return JsonResponse({"error": "Query is required"}, status=400)
 
-    # Параметры для запроса в 2GIS Suggest API
+import requests
+from django.http import JsonResponse
+
+
+def suggest_view(request):
+    query = request.GET.get('query', '')
+    url = "https://catalog.api.2gis.ru/3.0/suggests"
     params = {
-        'q': query,
-        'key': settings.DGIS_API_KEY,  # Ключ API 2GIS, сохраненный в settings.py
+        "key": settings.DGIS_API_KEY,
+        "q": query,
+        "viewpoint1": "69.20251452558023,42.39648259337066",
+        "viewpoint2": "69.97155747441977,42.23440940662934",
+        # Минимальный набор полей для сокращения объема данных
+        "fields": "items.name_ex,items.address_name,items.type,items.point",
+        "type": "branch,building",
+        "search_device_type": "desktop",
+        "search_user_hash": "7005176812676539700",
+        "locale": "ru_KZ",
+        "stat[sid]": "367503b7-37b7-4996-b5b0-daf647959b23",
+        "stat[user]": "4ec42c7a-a751-49ba-87e3-0ecdbe003804",
+        "shv": "2024-10-07-20",
+        "r": "119935042"
     }
 
-    # Запрос к API 2GIS
-    url = 'https://catalog.api.2gis.com/3.0/suggests'
     response = requests.get(url, params=params)
 
-    # Проверка успешности запроса
     if response.status_code == 200:
         data = response.json()
         return JsonResponse(data)
     else:
-        return JsonResponse({"error": "Failed to fetch data from 2GIS"}, status=500)
-
-
-
+        return JsonResponse({"error": "Failed to fetch data"}, status=response.status_code)
 
 
 
 class CalculateDistanceView(APIView):
     def post(self, request, *args, **kwargs):
         origin = request.data.get('origin', '')  # Получаем точку отправления
-        destination = '42.366308, 69.525283'  # Фиксированная точка назначения
-        mode = request.data.get('mode', 'driving')  # Режим по умолчанию
+        destination = '42.366991,69.52625'  # Фиксированная точка назначения
+        mode = 'driving'  # Режим по умолчанию
         api_key = 'AIzaSyDqiZx9bv1VK85IzCLSeXy9FvCjZeB-_bc'  # Получаем ключ API из переменных окружения
 
         if not origin:
@@ -82,8 +90,8 @@ class CalculateDistanceView(APIView):
                 return Response({
                     'distance': distance,
                     'duration': duration,
-                    'steps': steps
                 })
+
             else:
                 return Response({'error': 'Маршрут не найден.'}, status=status.HTTP_400_BAD_REQUEST)
 
